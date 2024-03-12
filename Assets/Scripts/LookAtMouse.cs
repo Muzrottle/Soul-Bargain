@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
-public class LookAtCamera : MonoBehaviour
+public class LookAtMouse : MonoBehaviour
 {
     [SerializeField] float turnDuration = 0.3f;
 
@@ -18,6 +18,11 @@ public class LookAtCamera : MonoBehaviour
 
     void Update()
     {
+        GetMousePos();
+    }
+
+    public void GetMousePos()
+    {
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue))
@@ -27,6 +32,7 @@ public class LookAtCamera : MonoBehaviour
             direction.y = 0;
 
             SetPlayerLookPos(direction);
+
             //transform.forward = direction;
         }
     }
