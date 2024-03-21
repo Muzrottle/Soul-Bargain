@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,9 +27,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float jumpHeight;
     bool isMoving = false;
 
+    CinemachineVirtualCamera virtualCamera;
+    public float rotationSpeed = 1f;
     LookAtMouse lookAtMouse;
     PlayerAnimationHandler playerAnimationHandler;
     CharacterController characterController;
+    Camera mainCamera;
 
     // Start is called before the first frame update
     void Start()
@@ -36,10 +40,28 @@ public class PlayerMovement : MonoBehaviour
         lookAtMouse = GetComponent<LookAtMouse>();
         playerAnimationHandler = GetComponent<PlayerAnimationHandler>();
         characterController = GetComponent<CharacterController>();
+        virtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
+        mainCamera = Camera.main;
     }
 
     private void Update()
     {
+        //CinemachineTransposer transposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
+        //if (transposer != null)
+        //{
+        //    if (Input.GetKey(KeyCode.Q))
+        //    {
+        //        Debug.Log("Rotate left");
+        //        transposer.m_FollowOffset.x += rotationSpeed * Time.deltaTime;
+        //    }
+        //    else if (Input.GetKey(KeyCode.E))
+        //    {
+        //        Debug.Log("Rotate right");
+        //        transposer.m_FollowOffset.x -= rotationSpeed * Time.deltaTime;
+        //    }
+        //    Debug.Log("Current FollowOffset X: " + transposer.m_FollowOffset.x);
+        //}
+
         ApplyGravity();
 
         if (playerAnimationHandler.CanMove())
@@ -61,13 +83,6 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if (collision.collider.GetComponent<Obstacle>().StopJumping == true)
-    //    {
-    //        isGrounded = true;
-    //    }
-    //}
 
     private void ApplyGravity()
     {
@@ -103,7 +118,21 @@ public class PlayerMovement : MonoBehaviour
 
             if (!playerAnimationHandler.IsJumping)
             {
-                move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+                // Get input for movement
+                float horizontalInput = Input.GetAxis("Horizontal");
+                float verticalInput = Input.GetAxis("Vertical");
+
+                // Calculate movement direction relative to camera
+                Vector3 cameraForward = mainCamera.transform.forward;
+                Vector3 cameraRight = mainCamera.transform.right;
+                cameraForward.y = 0f;
+                cameraRight.y = 0f;
+                cameraForward.Normalize();
+                cameraRight.Normalize();
+
+                // Calculate movement direction
+                move = cameraForward * verticalInput + cameraRight * horizontalInput;
+                //move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
                 lookAtMouse.SetPlayerLookPos(move);
             }
 
@@ -117,15 +146,6 @@ public class PlayerMovement : MonoBehaviour
     public void PlayerJump()
     {
         velocity += jumpHeight;
-        //float inputH = Input.GetAxis("Horizontal");
-        //float inputV = Input.GetAxis("Vertical");
-
-        //Vector3 forward = transform.forward * inputV;
-        //Vector3 right = transform.right * inputH;
-
-        //// Normalize the movement vector and add forward speed
-        //Vector3 moveDirection = (forward + right).normalized * forwardSpeed;
-        //characterController.Move(moveDirection * forwardSpeed * Time.deltaTime);
     }
 
     public void StartLookingAtMouse()
@@ -149,7 +169,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (lookAtMouse.enabled)
         {
-            lookAtMouse.enabled = false;
+            //lookAtMouse.enabled = false;
         }
     }
 }

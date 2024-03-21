@@ -11,10 +11,13 @@ public class PlayerAnimationHandler : MonoBehaviour
     [SerializeField] AvatarMask blockMoveMask;
 
     PlayerMovement playerMovement;
+    PlayerAttributes playerAttributes;
     LookAtMouse lookAtMouse;
     Animator playerAnim;
+    Camera mainCamera;
 
     bool isAttacking = false;
+    public bool IsAttacking { get { return isAttacking; } }
     bool isDodging = false;
     bool isBlocking = false;
     bool isMoving = false;
@@ -34,8 +37,10 @@ public class PlayerAnimationHandler : MonoBehaviour
     void Start()
     {
         playerMovement = GetComponent<PlayerMovement>();
+        playerAttributes = GetComponent<PlayerAttributes>();
         playerAnim = GetComponent<Animator>();
         lookAtMouse = GetComponent<LookAtMouse>();
+        mainCamera = Camera.main;
     }
 
     // Update is called once per frame
@@ -48,11 +53,16 @@ public class PlayerAnimationHandler : MonoBehaviour
         JumpAnim();
     }
 
+    private void OnAnimatorIK(int layerIndex)
+    {
+        playerAnim.SetLookAtWeight(1f, 0f, 0.6f, 0.8f, 0.5f);
+        Ray lookAtRay = new Ray(transform.position, mainCamera.transform.forward);
+
+        playerAnim.SetLookAtPosition(lookAtRay.GetPoint(25));
+    }
+
     private void MovementAnim()
     {
-        Debug.Log("IsSprinting: " +IsSprinting);
-        Debug.Log("IsMoving: " + IsMoving);
-        Debug.Log("IsLanded: " + IsMoving);
         if (playerMovement.Move != Vector3.zero && CanMove())
         {
             isMoving = true;
@@ -92,6 +102,7 @@ public class PlayerAnimationHandler : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0) && CanAttack())
         {
             playerAnim.SetTrigger("isAttacking");
+            playerAttributes.DrainInstantStamina(5f);
         }
 
         if (isAttacking)
@@ -133,72 +144,9 @@ public class PlayerAnimationHandler : MonoBehaviour
             isLanded = false;
             playerAnim.applyRootMotion = false;
             playerAnim.SetBool("isJumping", isJumping);
-            //Vector3 jump = transform.position + transform.forward + Vector3.up * 5f;
-            //transform.DOJump(jump, 2f, 1, 1f)
-            //.SetEase(Ease.Linear)
-            //.OnComplete(() =>
-            //{
-            //    ApplyGravity();
-            //});
+            playerAttributes.DrainInstantStamina(10f);
         }
-
-        //if (Input.GetKeyDown(KeyCode.V))
-        //{
-        //    Debug.Log("Zýpla");
-        //    Vector3 jump = transform.position + transform.forward + Vector3.up * 5f;
-        //    playerAnim.applyRootMotion = false;
-
-        //    transform.DOJump(jump, 2f, 1, 1f)
-        //    .SetEase(Ease.Linear)
-        //    .OnComplete(()=>{ playerAnim.applyRootMotion = true; });
-        //}
-        //if (CanJump())
-        //{
-        //    playerAnim.applyRootMotion = false;
-        //    isGrounded = false;
-        //    playerAnim.SetBool("isJumping", isJumping);
-        //}
     }
-
-    //private void StopJumping()
-    //{
-    //    if (isJumping && characterController.isGrounded && playerMovement.Velocity < 0f)
-    //    {
-    //        playerAnim.applyRootMotion = true;
-    //        isGrounded = true;
-    //        isJumping = false;
-    //        playerAnim.SetBool("isJumping", isJumping);
-    //    }
-    //}
-
-    //void ApplyGravity()
-    //{
-    //    // Calculate the time it takes to fall back to the ground
-    //    float timeToGround = 1f * 0.5f;
-
-    //    // Decrease the jump height for the downward motion
-    //    float jumpHeight = 0;
-
-    //    // Use DOTween to animate the downward motion (falling back to the ground)
-    //    transform.DOMoveY(0, timeToGround)
-    //        .SetEase(Ease.InQuad)
-    //        .OnStart(() =>
-    //        {
-    //            Debug.Log("Gravity applied!");
-    //        })
-    //        .OnComplete(() =>
-    //        {
-    //            Debug.Log("Landed on the ground!");
-
-    //            // Reset the jump height for the next jump
-    //            jumpHeight = 2f;
-    //        });
-    //}
-
-    //public void HasJumped()
-    //{
-    //    isJumping = true;
-    //}
 
     public void TouchedGround()
     {
@@ -234,7 +182,7 @@ public class PlayerAnimationHandler : MonoBehaviour
     private bool CanAttack() => !isDodging && isLanded;
     public bool CanJump() => (isMoving || isSprinting) && isGrounded && !isDodging && isLanded;
     private bool CanBlock() => !isAttacking && !isDodging && !isBlocking && isLanded;
-    private bool StopBlock() => isAttacking || isDodging && isBlocking && !isLanded;
+    private bool StopBlock() => (isAttacking || isDodging) && isBlocking && isLanded;
     public bool CanMove() => !isAttacking && isLanded;
     public bool CanSprint() => isMoving && !isSprinting && !isBlocking && isLanded;
     public bool StopSprint() => isBlocking || !isMoving || !isLanded;
