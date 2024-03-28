@@ -14,6 +14,7 @@ public class PlayerAttributes : MonoBehaviour
     [SerializeField] float staminaRegenStartTime = 2f;
 
     float currentStamina;
+    public float CurrentStamina { get { return currentStamina; } }
     float timePastSinceStaminaDrained;
 
     PlayerAnimationHandler playerAnimationHandler;
@@ -24,6 +25,7 @@ public class PlayerAttributes : MonoBehaviour
         playerAnimationHandler = GetComponent<PlayerAnimationHandler>();
         staminaSlider.maxValue = maxStamina;
         staminaSlider.value = maxStamina;
+        currentStamina = maxStamina;
     }
 
     // Update is called once per frame
@@ -34,24 +36,23 @@ public class PlayerAttributes : MonoBehaviour
             timePastSinceStaminaDrained += Time.deltaTime;
         }
 
-        if (timePastSinceStaminaDrained >= staminaRegenStartTime)
+        if (timePastSinceStaminaDrained >= staminaRegenStartTime && currentStamina != maxStamina)
         {
             RegenarateStamina();
-        }
-
-        if (playerAnimationHandler.IsSprinting)
-        {
-            DrainStamina();
         }
     }
 
     private void RegenarateStamina()
     {
         currentStamina += staminaRegenSpeed * Time.deltaTime;
+        if (currentStamina >= maxStamina)
+        {
+            currentStamina = maxStamina;
+        }
         staminaSlider.value = currentStamina;
     }
 
-    private void DrainStamina()
+    public void DrainStamina()
     {
         currentStamina -= staminaDrainSpeed * Time.deltaTime;
         staminaSlider.value = currentStamina;
@@ -63,5 +64,17 @@ public class PlayerAttributes : MonoBehaviour
         currentStamina -= drainAmount;
         staminaSlider.value = currentStamina;
         timePastSinceStaminaDrained = 0;
+    }
+
+    public bool CheckEnoughStamina(float staminaCost)
+    {
+        if (currentStamina >= staminaCost)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

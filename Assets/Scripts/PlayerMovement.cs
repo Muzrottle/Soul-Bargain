@@ -62,6 +62,9 @@ public class PlayerMovement : MonoBehaviour
         //    Debug.Log("Current FollowOffset X: " + transposer.m_FollowOffset.x);
         //}
 
+        Debug.Log("Grounded: " + characterController.isGrounded);
+
+
         ApplyGravity();
 
         if (playerAnimationHandler.CanMove())
@@ -82,6 +85,23 @@ public class PlayerMovement : MonoBehaviour
                 characterController.Move(move * forwardSpeed * Time.deltaTime);
             }
         }
+
+        if (!characterController.isGrounded && !playerAnimationHandler.IsJumping)
+        {
+            //if (playerAnimationHandler.IsSprinting)
+            //{
+            //    characterController.Move(direction * Time.deltaTime);
+            //    characterController.Move(move * forwardSpeed * Time.deltaTime);
+            //}
+            //else
+            //{
+            //    characterController.Move(direction * Time.deltaTime);
+            //    characterController.Move(move * Time.deltaTime);
+            //}
+            characterController.Move(direction * Time.deltaTime);
+            //    characterController.Move(direction * Time.deltaTime);
+
+        }
     }
 
     private void ApplyGravity()
@@ -94,7 +114,6 @@ public class PlayerMovement : MonoBehaviour
         {
             velocity += gravity * gravityMultiplier * Time.deltaTime;
         }
-
         direction.y = velocity;
     }
 

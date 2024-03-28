@@ -10,6 +10,12 @@ public class PlayerAnimationHandler : MonoBehaviour
 {
     [SerializeField] AvatarMask blockMoveMask;
 
+    [Header("AnimationStaminaCost")]
+    [SerializeField] float dodgeStamina = 5f;
+    [SerializeField] float jumpStamina = 10f;
+    [SerializeField] float attackStamina = 5f;
+    [SerializeField] float blockStamina = 5f;
+
     PlayerMovement playerMovement;
     PlayerAttributes playerAttributes;
     LookAtMouse lookAtMouse;
@@ -85,12 +91,18 @@ public class PlayerAnimationHandler : MonoBehaviour
             isSprinting = false;
             playerAnim.SetBool("isSprinting", isSprinting);
         }
+
+        if (isSprinting)
+        {
+            playerAttributes.DrainStamina();
+        }
     }
 
     private void DodgeAnim()
     {
         if (Input.GetKeyDown(KeyCode.Space) && CanDodge())
         {
+            playerAttributes.DrainInstantStamina(dodgeStamina);
             playerAnim.Play("Dodge");
             isDodging = true;
         }
@@ -102,12 +114,17 @@ public class PlayerAnimationHandler : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0) && CanAttack())
         {
             playerAnim.SetTrigger("isAttacking");
-            playerAttributes.DrainInstantStamina(5f);
         }
 
         if (isAttacking)
         {
             playerMovement.StopLookingAtMouse();
+            if (lookAtMouse.IsLockedOn)
+            {
+                Vector3 directionToEnemy = lookAtMouse.CurrentTarget.position - transform.position;
+                directionToEnemy.y = 0f;
+                lookAtMouse.SetPlayerLookPos(directionToEnemy);
+            }
         }
     }
 
@@ -126,6 +143,7 @@ public class PlayerAnimationHandler : MonoBehaviour
 
         if (isBlocking && Input.GetKeyDown(KeyCode.R))
         {
+            playerAttributes.DrainInstantStamina(blockStamina);
             playerAnim.SetTrigger("hasBlocked");
         }
     }
@@ -144,7 +162,7 @@ public class PlayerAnimationHandler : MonoBehaviour
             isLanded = false;
             playerAnim.applyRootMotion = false;
             playerAnim.SetBool("isJumping", isJumping);
-            playerAttributes.DrainInstantStamina(10f);
+            playerAttributes.DrainInstantStamina(jumpStamina);
         }
     }
 
@@ -152,13 +170,16 @@ public class PlayerAnimationHandler : MonoBehaviour
     {
         Debug.Log("isLanded");
 
-        if (sprintJumped)
+        if (isJumping)
         {
-            playerAnim.SetTrigger("jumpRoll");
-        }
-        else
-        {
-            playerAnim.SetTrigger("isLanded");
+            if (sprintJumped)
+            {
+                playerAnim.SetTrigger("jumpRoll");
+            }
+            else
+            {
+                playerAnim.SetTrigger("isLanded");
+            }
         }
 
         isJumping = false;
@@ -172,24 +193,26 @@ public class PlayerAnimationHandler : MonoBehaviour
 
     public void Falling()
     {
+        playerAnim.applyRootMotion = false;
         isLanded = false;
         isGrounded = false;
         isFalling = true;
         playerAnim.SetBool("isFalling", isFalling);
     }
 
-    private bool CanDodge() => !isAttacking && isLanded;
-    private bool CanAttack() => !isDodging && isLanded;
-    public bool CanJump() => (isMoving || isSprinting) && isGrounded && !isDodging && isLanded;
+    private bool CanDodge() => !isAttacking && !isDodging && playerAttributes.CheckEnoughStamina(dodgeStamina) && isLanded;
+    private bool CanAttack() => !isDodging && playerAttributes.CheckEnoughStamina(attackStamina) && isLanded;
+    public bool CanJump() => (isMoving || isSprinting) && playerAttributes.CheckEnoughStamina(jumpStamina) && isGrounded && !isDodging && isLanded;
     private bool CanBlock() => !isAttacking && !isDodging && !isBlocking && isLanded;
     private bool StopBlock() => (isAttacking || isDodging) && isBlocking && isLanded;
     public bool CanMove() => !isAttacking && isLanded;
-    public bool CanSprint() => isMoving && !isSprinting && !isBlocking && isLanded;
-    public bool StopSprint() => isBlocking || !isMoving || !isLanded;
+    public bool CanSprint() => isMoving && !isSprinting && !isBlocking && playerAttributes.CurrentStamina > 0f && isLanded;
+    public bool StopSprint() => isBlocking || !isMoving || playerAttributes.CurrentStamina <= 0f || !isLanded;
 
 
     private void Attacked()
     {
+        playerAttributes.DrainInstantStamina(attackStamina);
         playerMovement.StopLookingAtMouse();
         isAttacking = true;
         lookAtMouse.GetMousePos();

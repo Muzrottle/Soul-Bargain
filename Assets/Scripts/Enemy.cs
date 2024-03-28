@@ -8,10 +8,15 @@ public class Enemy : MonoBehaviour
 
     float currentEnemyHealth;
 
+    LookAtMouse lookAtMouse;
+    EnemyDetection enemyDetection;
+
     // Start is called before the first frame update
     void Start()
     {
         currentEnemyHealth = enemyMaxHealth;
+        lookAtMouse = FindObjectOfType<LookAtMouse>();
+        enemyDetection = FindObjectOfType<EnemyDetection>();
     }
 
     // Update is called once per frame
@@ -27,6 +32,8 @@ public class Enemy : MonoBehaviour
 
         if (currentEnemyHealth == 0)
         {
+            lookAtMouse.RemoveFocus();
+            enemyDetection.RemoveEnemy(gameObject.transform);
             Destroy(gameObject);
         }
     }

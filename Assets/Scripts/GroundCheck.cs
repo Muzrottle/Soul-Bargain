@@ -6,18 +6,27 @@ public class GroundCheck : MonoBehaviour
 {
     [SerializeField] float raycastDistance = 0.1f;  // Length of the ray
 
+    float fallTimer = 0f;
+
     PlayerAnimationHandler playerAnimationHandler;
     PlayerMovement playerMovement;
-    
+    CharacterController characterController;
+
     private void Start()
     {
         playerAnimationHandler = GetComponent<PlayerAnimationHandler>();
         playerMovement = GetComponent<PlayerMovement>();
+        characterController = GetComponent<CharacterController>();
     }
 
     void Update()
     {
-        if (!playerAnimationHandler.IsGrounded)
+        if (characterController.isGrounded)
+        {
+            fallTimer = 0f;
+        }
+
+        if (playerAnimationHandler.IsJumping || !characterController.isGrounded || !playerAnimationHandler.IsGrounded)
         {
             CheckGrounded();
         }
@@ -28,13 +37,24 @@ public class GroundCheck : MonoBehaviour
         Vector3 raycastOrigin = transform.position + Vector3.up * 0.1f; // Start slightly above the character
         RaycastHit hit;
 
-        if (Physics.Raycast(raycastOrigin, Vector3.down, out hit, raycastDistance) && playerMovement.Velocity <= 0f)
+        if (playerMovement.Velocity <= 0f && characterController.isGrounded)
         {
+            Debug.Log("Gird");
+
             playerAnimationHandler.TouchedGround();
         }
-        else if (!Physics.Raycast(raycastOrigin, Vector3.down, out hit, raycastDistance) && playerAnimationHandler.IsGrounded)
+        else if (!playerAnimationHandler.IsJumping && !characterController.isGrounded)
         {
-            Debug.Log("Character is not grounded");
+            if (fallTimer <= 0.1f)
+            {
+                fallTimer += Time.deltaTime;
+            }
+        }
+
+        Debug.Log(fallTimer);
+
+        if (fallTimer >= 0.1f && playerAnimationHandler.IsGrounded && !Physics.Raycast(raycastOrigin, Vector3.down, out hit, raycastDistance))
+        {
             playerAnimationHandler.Falling();
         }
     }
