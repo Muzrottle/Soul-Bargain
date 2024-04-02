@@ -8,6 +8,9 @@ using UnityEngine.EventSystems;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField] Transform playersWeaponHand;
+    public Transform PlayersWeaponHand { get { return playersWeaponHand; } }
+
     [SerializeField] float timeToLookAtMouseAgain = 1f;
 
     Vector3 direction;
@@ -154,11 +157,10 @@ public class PlayerMovement : MonoBehaviour
                 //move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
                 lookAtMouse.SetPlayerLookPos(move);
             }
-
         }
         else
         {
-            move = new Vector3(0, 0, 0);
+            SetMoveZero();
         }
     }
 
@@ -190,5 +192,10 @@ public class PlayerMovement : MonoBehaviour
         {
             //lookAtMouse.enabled = false;
         }
+    }
+
+    public void SetMoveZero()
+    {
+        move = new Vector3(0, 0, 0);
     }
 }

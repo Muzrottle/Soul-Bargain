@@ -5,11 +5,13 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] float enemyMaxHealth = 100f;
+    [SerializeField] float soul = 10f;
 
     float currentEnemyHealth;
 
     LookAtMouse lookAtMouse;
     EnemyDetection enemyDetection;
+    Currency playerCurrency;
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +19,7 @@ public class Enemy : MonoBehaviour
         currentEnemyHealth = enemyMaxHealth;
         lookAtMouse = FindObjectOfType<LookAtMouse>();
         enemyDetection = FindObjectOfType<EnemyDetection>();
+        playerCurrency = FindObjectOfType<Currency>();
     }
 
     // Update is called once per frame
@@ -30,10 +33,11 @@ public class Enemy : MonoBehaviour
         currentEnemyHealth -= damageAmount;
         Debug.Log("AH");
 
-        if (currentEnemyHealth == 0)
+        if (currentEnemyHealth <= 0)
         {
             lookAtMouse.RemoveFocus();
             enemyDetection.RemoveEnemy(gameObject.transform);
+            playerCurrency.GainSouls(soul);
             Destroy(gameObject);
         }
     }

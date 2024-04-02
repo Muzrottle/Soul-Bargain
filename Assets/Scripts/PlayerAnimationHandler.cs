@@ -73,7 +73,7 @@ public class PlayerAnimationHandler : MonoBehaviour
         {
             isMoving = true;
             playerAnim.SetBool("isMoving", isMoving);
-
+            Debug.Log("Giriyorum");
         }
         else
         {
@@ -189,6 +189,7 @@ public class PlayerAnimationHandler : MonoBehaviour
         playerAnim.applyRootMotion = true;
         isFalling = false;
         playerAnim.SetBool("isFalling", isFalling);
+        playerMovement.SetMoveZero();
     }
 
     public void Falling()
@@ -205,7 +206,7 @@ public class PlayerAnimationHandler : MonoBehaviour
     public bool CanJump() => (isMoving || isSprinting) && playerAttributes.CheckEnoughStamina(jumpStamina) && isGrounded && !isDodging && isLanded;
     private bool CanBlock() => !isAttacking && !isDodging && !isBlocking && isLanded;
     private bool StopBlock() => (isAttacking || isDodging) && isBlocking && isLanded;
-    public bool CanMove() => !isAttacking && isLanded;
+    public bool CanMove() => !isAttacking && !isJumping && isLanded;
     public bool CanSprint() => isMoving && !isSprinting && !isBlocking && playerAttributes.CurrentStamina > 0f && isLanded;
     public bool StopSprint() => isBlocking || !isMoving || playerAttributes.CurrentStamina <= 0f || !isLanded;
 

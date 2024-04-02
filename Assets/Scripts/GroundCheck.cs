@@ -39,8 +39,6 @@ public class GroundCheck : MonoBehaviour
 
         if (playerMovement.Velocity <= 0f && characterController.isGrounded)
         {
-            Debug.Log("Gird");
-
             playerAnimationHandler.TouchedGround();
         }
         else if (!playerAnimationHandler.IsJumping && !characterController.isGrounded)
@@ -50,8 +48,6 @@ public class GroundCheck : MonoBehaviour
                 fallTimer += Time.deltaTime;
             }
         }
-
-        Debug.Log(fallTimer);
 
         if (fallTimer >= 0.1f && playerAnimationHandler.IsGrounded && !Physics.Raycast(raycastOrigin, Vector3.down, out hit, raycastDistance))
         {

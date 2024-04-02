@@ -12,7 +12,9 @@ GameObject:
   - component: {fileID: 238642695598736862}
   - component: {fileID: 8581543194017382735}
   - component: {fileID: 5915041321441941656}
-  m_Layer: 0
+  - component: {fileID: 1864209451}
+  - component: {fileID: 1864209452}
+  m_Layer: 7
   m_Name: Door_Middle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,3 +100,42 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -4216444321136458003, guid: edcc86a903182d0429c0d7b2c727fec0, type: 3}
+--- !u!111 &1864209451
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5721723476799238222}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 7400000, guid: fbf82aa6953ec814892f7217d2947191, type: 2}
+  - {fileID: 7400000, guid: 9dfd8f039ede14a48a12f1e953b32e33, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
+--- !u!114 &1864209452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5721723476799238222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1147238cbe3c8e4db91115548b56b2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isInteractable: 1
+  isClosable: 1
+  isInteracted: 0
+  isChest: 0
+  isSword: 0
+  playersHand: {fileID: 0}
+  item: {fileID: 0}
+  animations:
+  - {fileID: 7400000, guid: fbf82aa6953ec814892f7217d2947191, type: 2}
+  - {fileID: 7400000, guid: 9dfd8f039ede14a48a12f1e953b32e33, type: 2}

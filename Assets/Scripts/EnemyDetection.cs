@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyDetection : MonoBehaviour
 {
-    List<Transform> enemies = new List<Transform>();
+    [SerializeField] List<Transform> enemies = new List<Transform>();
     public List<Transform> Enemies { get { return enemies; } }
 
     void OnTriggerEnter(Collider other)

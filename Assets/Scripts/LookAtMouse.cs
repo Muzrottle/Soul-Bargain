@@ -42,9 +42,6 @@ public class LookAtMouse : MonoBehaviour
         freeLookCamera = FindObjectOfType<CinemachineFreeLook>();
         enemyDetection = GetComponent<EnemyDetection>();
         Cursor.lockState = CursorLockMode.Locked;
-
-        // Disable the Y-axis input
-        freeLookCamera.m_YAxis.m_InputAxisName = "Mouse Y";
         
         // Disable the Y-axis input
         freeLookCamera.m_YAxis.Value = 0f;
@@ -53,6 +50,15 @@ public class LookAtMouse : MonoBehaviour
     void Update()
     {
         ChangeCameraYaxis();
+        HandleLockOn();
+    }
+
+    private void HandleLockOn()
+    {
+        if (isLockedOn && Vector3.Distance(gameObject.transform.position, currentTarget.transform.position) > gameObject.GetComponent<SphereCollider>().radius * 2f)
+        {
+            RemoveFocus();
+        }
 
         if (Input.GetKeyDown(KeyCode.Q) && canLockOn)
         {
@@ -69,6 +75,7 @@ public class LookAtMouse : MonoBehaviour
         if (isLockedOn)
         {
             freeLookCamera.m_XAxis.m_InputAxisName = "";
+            freeLookCamera.m_YAxis.m_InputAxisName = "";
 
             if (!focusParticle.activeInHierarchy)
             {
@@ -79,6 +86,7 @@ public class LookAtMouse : MonoBehaviour
         else
         {
             freeLookCamera.m_XAxis.m_InputAxisName = "Mouse X";
+            freeLookCamera.m_YAxis.m_InputAxisName = "Mouse Y";
 
             if (focusParticle.activeInHierarchy)
             {
