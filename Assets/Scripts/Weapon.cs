@@ -18,7 +18,22 @@ public class Weapon : MonoBehaviour
     {
         if (other.gameObject.GetComponent<Enemy>() && playerAnimationHandler.IsAttacking)
         {
-            other.gameObject.GetComponent<Enemy>().GotDamaged(weaponDmg);
+            if (!playerAttack.DidDamage && playerAttack.CanDamage)
+            {
+                other.gameObject.GetComponent<Enemy>().GotDamaged(weaponDmg);
+                playerAttack.DealedDamage();
+            }
+        }
+
+        if (other.GetComponentInParent<EnemyAI>() != null)
+        {
+            if (other.GetComponentInParent<EnemyAI>().CanDamage)
+            {
+                if (other.gameObject == other.GetComponentInParent<EnemyAI>().EnemySword && playerAnimationHandler.IsBlocking)
+                {
+                    playerAnimationHandler.Blocked();
+                }
+            }
         }
     }
 }

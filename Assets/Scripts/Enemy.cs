@@ -12,6 +12,7 @@ public class Enemy : MonoBehaviour
     LookAtMouse lookAtMouse;
     EnemyDetection enemyDetection;
     Currency playerCurrency;
+    EnemyAI enemyAI;
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +21,7 @@ public class Enemy : MonoBehaviour
         lookAtMouse = FindObjectOfType<LookAtMouse>();
         enemyDetection = FindObjectOfType<EnemyDetection>();
         playerCurrency = FindObjectOfType<Currency>();
+        enemyAI = GetComponent<EnemyAI>();
     }
 
     // Update is called once per frame
@@ -31,14 +33,14 @@ public class Enemy : MonoBehaviour
     public void GotDamaged(float damageAmount)
     {
         currentEnemyHealth -= damageAmount;
-        Debug.Log("AH");
+        enemyAI.Damaged();
 
         if (currentEnemyHealth <= 0)
         {
             lookAtMouse.RemoveFocus();
             enemyDetection.RemoveEnemy(gameObject.transform);
             playerCurrency.GainSouls(soul);
-            Destroy(gameObject);
+            enemyAI.Died();
         }
     }
 }

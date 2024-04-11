@@ -38,7 +38,6 @@ public class InteractHandler : MonoBehaviour
 
         if (Physics.Raycast(raycastOrigin, mainCamera.transform.forward, out hit, raycastDistance, interactableObjectMask))
         {
-            Debug.Log(hit.transform.name);
             if (hit.transform.GetComponent<Obstacle>())
             {
                 if (hit.transform.GetComponent<Obstacle>().IsInteractable && Vector3.Distance(gameObject.transform.position, hit.transform.position) < 2f)

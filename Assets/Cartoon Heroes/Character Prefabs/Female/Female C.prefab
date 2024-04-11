@@ -853,6 +853,9 @@ GameObject:
   - component: {fileID: 2076759737}
   - component: {fileID: 397140605550992720}
   - component: {fileID: 9042053989306713867}
+  - component: {fileID: 1879596537}
+  - component: {fileID: 1879596550}
+  - component: {fileID: 1879596563}
   m_Layer: 0
   m_Name: Female C
   m_TagString: Untagged
@@ -988,6 +991,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc59a1b6724a4664f8fe19e905efd4b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playersWeaponHand: {fileID: 4005359339715790}
   timeToLookAtMouseAgain: 1
   gravityMultiplier: 3
   forwardSpeed: 7
@@ -1083,6 +1087,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6996ae311bc27064db07d203cf8e6726, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemies: []
 --- !u!114 &9042053989306713867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1100,6 +1105,46 @@ MonoBehaviour:
   interactableObjectMask:
     serializedVersion: 2
     m_Bits: 128
+--- !u!114 &1879596537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131775697853092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c8c75ec4bf7daa41afdc0d804ae605b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  souls: 0
+--- !u!114 &1879596550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131775697853092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3adb0375ad633f74b91625de4c778968, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1879596563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131775697853092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09a079efefeb9a74ba9bff90fb57f1af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthSlider: {fileID: 0}
+  healthFill: {fileID: 0}
+  maxHealth: 50
 --- !u!1 &1142277583328720
 GameObject:
   m_ObjectHideFlags: 0
@@ -4192,7 +4237,8 @@ GameObject:
   - component: {fileID: 23703550787044264}
   - component: {fileID: 1682186771}
   - component: {fileID: 1682186770}
-  m_Layer: 0
+  - component: {fileID: 1921352852}
+  m_Layer: 7
   m_Name: Sword_3_Short
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4290,6 +4336,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponDmg: 10
+--- !u!114 &1921352852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640723061162136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1147238cbe3c8e4db91115548b56b2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isInteractable: 0
+  isClosable: 0
+  isInteracted: 0
+  isChest: 0
+  isSword: 1
+  item: {fileID: 0}
+  animations: []
 --- !u!1 &1648664206489190
 GameObject:
   m_ObjectHideFlags: 0

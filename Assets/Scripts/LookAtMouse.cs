@@ -153,7 +153,6 @@ public class LookAtMouse : MonoBehaviour
         {
             currentTarget = newTarget;
             // Additional logic to adjust camera, UI, player controls, etc.
-            Debug.Log("Locked on to: " + currentTarget.name);
 
             isLockedOn = true;
 

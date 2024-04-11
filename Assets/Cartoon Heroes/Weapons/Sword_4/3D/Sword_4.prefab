@@ -97,8 +97,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.35, y: 0.15, z: 0.85}
-  m_Center: {x: -0.19, y: 0.06, z: 0.6}
+  m_Size: {x: 0.35, y: 0.15, z: 1.35}
+  m_Center: {x: -0.17, y: 0.05, z: 0.35}
 --- !u!114 &-3119177053068469259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,6 +129,5 @@ MonoBehaviour:
   isInteracted: 0
   isChest: 0
   isSword: 1
-  playersHand: {fileID: 0}
   item: {fileID: 0}
   animations: []

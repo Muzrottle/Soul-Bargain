@@ -65,9 +65,6 @@ public class PlayerMovement : MonoBehaviour
         //    Debug.Log("Current FollowOffset X: " + transposer.m_FollowOffset.x);
         //}
 
-        Debug.Log("Grounded: " + characterController.isGrounded);
-
-
         ApplyGravity();
 
         if (playerAnimationHandler.CanMove())
